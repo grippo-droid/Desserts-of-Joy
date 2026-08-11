@@ -553,7 +553,6 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   text-transform: uppercase;
   color: var(--c-espresso-mid);
 }
-.footer__sep { margin-inline: var(--s-2); opacity: 0.6; }
 
 /* --- Instagram link ----------------------------------------------------
    inline-flex keeps the glyph and the handle welded together, so the pair
@@ -614,11 +613,9 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   .ig-link:active { transform: none; }
 }
 
-/* On a 320px screen these lines wrap. Keep phrases intact rather than
-   splitting "Taxes / included", and let the browser even out the ragged
-   edge where it supports balancing. */
-.footer__nowrap { white-space: nowrap; }
-.footer__line   { text-wrap: balance; }
+/* "Made fresh on the cart, every evening" still wraps on a narrow phone —
+   let the browser even out the ragged edge where it supports balancing. */
+.footer__line { text-wrap: balance; }
 
 /* -------------------------------------------------------------------------
    7. VERY NARROW PHONES (≤360px — old/compact Androids)
@@ -649,14 +646,6 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
      lines to nothing and leaving two orphaned circles */
   .rule__label { letter-spacing: 0.15em; text-indent: 0.075em; }
 
-  /* The footer's second line was already at the very edge here — it needed
-     288px of a 288px box even before the Instagram link was emphasised.
-     Buy the room back from spacing rather than from the type: a narrower
-     footer gutter, a tighter separator, and a slightly smaller (but still
-     clearly emphasised) link. "Taxes included" is untouched. */
-  .footer { padding-inline: 0.75rem; }
-  .footer__sep { margin-inline: var(--s-1); }
-  .ig-link { font-size: 1.1em; }
 }
 
 /* -------------------------------------------------------------------------
