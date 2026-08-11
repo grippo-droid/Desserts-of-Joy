@@ -661,6 +661,20 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
    row centres a hair off. */
 .footer-link__label { margin-inline-end: calc(var(--ls-mid) * -1); }
 
+/* The phone number is functional information — someone has to read and
+   dial it correctly — so it gets legibility that the decorative type
+   around it does not need. Cormorant's default figures are OLD-STYLE:
+   3 5 7 9 drop below the baseline and 6 8 ride high, so a number bounces
+   and the digits blur together at 13px. Switching to lining, tabular
+   figures levels them onto one cap-height line at a fixed advance.
+   Both features are present in the subsetted files, so this costs nothing
+   and keeps the number in the same typeface as everything else. Applies
+   to the phone label only — the Instagram handle is untouched. */
+.footer-link--tel .footer-link__label {
+  font-variant-numeric: lining-nums tabular-nums;
+  font-feature-settings: "lnum" 1, "tnum" 1;
+}
+
 .footer-link:hover { color: var(--c-rust); }
 .footer-link:hover .footer-link__label { text-decoration: underline; text-underline-offset: 3px; }
 .footer-link:active { color: var(--c-rust); opacity: 0.75; transform: scale(0.97); }
