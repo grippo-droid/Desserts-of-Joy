@@ -553,9 +553,55 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   text-transform: uppercase;
   color: var(--c-espresso-mid);
 }
-.footer__line a { color: var(--c-rust); text-decoration: none; }
-.footer__line a:hover { text-decoration: underline; }
 .footer__sep { margin-inline: var(--s-2); opacity: 0.6; }
+
+/* --- Instagram link ----------------------------------------------------
+   inline-flex keeps the glyph and the handle welded together, so the pair
+   can never be split across a line break.
+
+   Sizing the tap target to the 44px accessibility guideline: the padding
+   creates the hit area, and the negative margin pulls most of it back out
+   of the layout. Horizontally it cancels exactly, so the line wraps as it
+   always did. Vertically it cancels only part of it, which lets the
+   footer breathe by ~10px rather than having a 44px hit box overlap the
+   line above it. */
+.ig-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+  color: var(--c-espresso-mid);   /* same as the footer meta type */
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: middle;
+
+  padding-block: 0.85rem;
+  padding-inline: 0.4rem;
+  margin-block: -0.55rem;    /* partial: leaves the footer a little air */
+  margin-inline: -0.4rem;    /* exact: horizontal layout is untouched */
+  border-radius: var(--r-pill);
+
+  transition: color var(--dur-fast) var(--ease),
+              opacity var(--dur-fast) var(--ease),
+              transform var(--dur-fast) var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ig-link__icon {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+  /* the tracking on the footer line would otherwise push the glyph off
+     from its own trailing space */
+  margin-inline-end: calc(var(--ls-mid) * -1);
+}
+
+.ig-link:hover { color: var(--c-rust); }
+.ig-link:hover .ig-link__handle { text-decoration: underline; text-underline-offset: 3px; }
+.ig-link:active { color: var(--c-rust); opacity: 0.75; transform: scale(0.97); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ig-link:active { transform: none; }
+}
 
 /* On a 320px screen these lines wrap. Keep phrases intact rather than
    splitting "Taxes / included", and let the browser even out the ragged
