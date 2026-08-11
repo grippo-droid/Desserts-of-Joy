@@ -92,7 +92,7 @@
   --f-display:"Cormorant Garamond", "Iowan Old Style", Georgia, serif;
   --f-body:   "EB Garamond", Georgia, "Times New Roman", serif;
 
-  --t-wordmark: clamp(2.9rem, 14.5vw, 5.5rem);
+  --wordmark-max: 34rem;    /* widest the curved wordmark is allowed to draw */
   --t-h2:       clamp(0.98rem, 3.4vw, 1.18rem);
   --t-body:     clamp(1.02rem, 3.1vw, 1.1rem);
   --t-small:    clamp(0.82rem, 2.6vw, 0.9rem);
@@ -180,6 +180,19 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
 }
 .skip-link:focus { left: var(--s-3); top: var(--s-3); }
 
+/* Announced by screen readers, never painted. Used for the wordmark text,
+   since the curved <textPath> version is aria-hidden. */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* -------------------------------------------------------------------------
    3. HERO
    ---------------------------------------------------------------------- */
@@ -205,6 +218,15 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   margin-inline: auto;
 }
 
+/* wordmark + eyebrow lockup. Capped to the SVG's own max width so the
+   eyebrow's percentage offset resolves against the same box the arc
+   scales within. */
+.hero__mark {
+  position: relative;
+  max-width: var(--wordmark-max);
+  margin-inline: auto;
+}
+
 .hero__eyebrow {
   font-family: var(--f-display);
   font-size: var(--t-micro);
@@ -212,18 +234,49 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   text-indent: calc(var(--ls-wide) / 2);
   text-transform: uppercase;
   color: var(--c-espresso-mid);
-  margin-bottom: var(--s-1);
+  /* Floated out of flow into the arc's hollow. Taken out of flow on
+     purpose: a negative margin would shrink .hero__mark below the SVG's
+     real height, and the descending tails of "J" and "y" would then spill
+     onto the rule line beneath. `bottom` is a percentage of the container
+     height, which is a fixed ratio of its width, so this tracks the arc at
+     every size. */
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 14%;
+  margin: 0;
 }
 
+/* --- curved wordmark ---------------------------------------------------
+   The <h1> is just a wrapper; the visible mark is the SVG. Scaling is done
+   entirely by the viewBox, so the arc and the type scale together and the
+   text can never wrap or re-flow — a textPath is a single run by
+   definition. */
 .wordmark {
+  margin-block: 0.1rem 0;   /* the eyebrow's negative margin does the spacing */
+  line-height: 0;
+}
+
+.wordmark__svg {
+  display: block;
+  width: 100%;
+  max-width: var(--wordmark-max);
+  height: auto;
+  margin-inline: auto;
+  /* the y-tail of "Joy" and the tall ascenders sit outside the arc's own
+     box; let them draw rather than being clipped at the viewBox edge */
+  overflow: visible;
+}
+
+.wordmark__text {
   font-family: var(--f-script);
   font-weight: 700;
-  font-size: var(--t-wordmark);
-  line-height: 0.92;
-  letter-spacing: 0.01em;
-  color: var(--c-espresso);
-  /* the script sits optically low; nudge it back into balance */
-  margin-block: 0.05em 0.12em;
+  font-size: 82px;          /* user units — scales with the viewBox */
+  fill: var(--c-espresso);
+  text-anchor: middle;
+  /* if the webfont is unavailable the fallback script is much wider;
+     hold the run to the arc so it can never overrun the artwork */
+  letter-spacing: 0;
 }
 
 /* --- ornamental rule: —— o  DESSERT CART  o —— --- */
@@ -232,8 +285,8 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   align-items: center;
   justify-content: center;
   gap: var(--s-3);
-  max-width: 21rem;
-  margin-inline: auto;
+  max-width: 30rem;   /* "Your Perfect Evening Spot" is a long tracked line */
+  margin: var(--s-2) auto 0;
 }
 .rule__line {
   flex: 1 1 auto;
@@ -525,6 +578,19 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   /* the wide tracking is what pushes the footer onto three lines here —
      ease it off just enough for each line to hold together */
   .footer__line { letter-spacing: 0.09em; text-indent: 0.045em; }
+
+  /* At this width the arc's descending arms close in on the ends of
+     "by two sisters". Tighten the tracking to pull those ends inward, and
+     drop the line slightly — a dome's opening widens as you go down. */
+  .hero__eyebrow {
+    letter-spacing: 0.15em;
+    text-indent: 0.075em;
+    bottom: 12%;
+  }
+
+  /* the long label was eating the whole rule, collapsing the flourish
+     lines to nothing and leaving two orphaned circles */
+  .rule__label { letter-spacing: 0.15em; text-indent: 0.075em; }
 }
 
 /* -------------------------------------------------------------------------

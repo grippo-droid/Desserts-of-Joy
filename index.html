@@ -42,14 +42,45 @@
 <header class="hero" role="banner">
   <div class="hero__inner">
 
-    <p class="hero__eyebrow">by two sisters</p>
+    <!-- Curved wordmark. The visible arc is an inline SVG using <textPath>;
+         because the SVG is inline (not an <img>) it renders with the
+         document's own self-hosted Caveat face — no extra font request.
+         The SVG is aria-hidden and the accessible name comes from the
+         visually-hidden text, because curved text inside <textPath> is not
+         reliably announced by screen readers. -->
+    <div class="hero__mark">
+    <h1 class="wordmark">
+      <span class="visually-hidden">Desserts of Joy</span>
+      <!-- viewBox is cropped to the measured ink of the arc (bbox
+           x 60→548, y -14→155) plus ~10 units of breathing room, so no
+           dead space shrinks the mark and nothing clips at the top. -->
+      <svg class="wordmark__svg" viewBox="44 -26 520 194"
+           xmlns="http://www.w3.org/2000/svg"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           aria-hidden="true" focusable="false">
+        <defs>
+          <!-- single dome arc: rises through "Desserts", peaks at "of",
+               descends through "Joy" -->
+          <path id="wordmark-arc" fill="none"
+                d="M 40 195 A 325 325 0 0 1 560 195"/>
+        </defs>
+        <text class="wordmark__text">
+          <textPath href="#wordmark-arc" xlink:href="#wordmark-arc"
+                    startOffset="50%">Desserts of Joy</textPath>
+        </text>
+      </svg>
+    </h1>
 
-    <h1 class="wordmark">Desserts of Joy</h1>
+      <!-- tucked into the hollow under the arc's peak; the offset is a
+           percentage of .hero__mark's width, so it tracks the arc as the
+           SVG scales instead of drifting -->
+      <p class="hero__eyebrow">by two sisters</p>
+    </div>
 
     <p class="rule" role="presentation">
       <span class="rule__line"></span>
       <span class="rule__dot"></span>
-      <span class="rule__label">Dessert Cart</span>
+      <span class="rule__label">Your Perfect Evening Spot</span>
       <span class="rule__dot"></span>
       <span class="rule__line"></span>
     </p>
