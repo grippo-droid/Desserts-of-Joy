@@ -69,30 +69,91 @@
     }
   }
 
-  if (sections.length && 'IntersectionObserver' in window) {
-    var visible = new Set();
+  /* Scroll spy.
 
-    var spy = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) visible.add(entry.target);
-        else visible.delete(entry.target);
+     This used to be an IntersectionObserver watching a fixed reading band
+     between the nav and 55% of the viewport. That strands the last
+     sections: a section can only cross the band if the page can scroll far
+     enough to push it up there, and near the end of the document it cannot.
+     On a phone the page ran out of scroll ~80px before "Coffee & Sips"
+     would have reached the band, so it and "Cake Glasses" never activated
+     and the pill stayed stuck on "Sandwiches".
+
+     Instead: pick the last section whose top has passed a reference line.
+     For most of the page that line sits just under the nav. Over the final
+     stretch — from the point where the last *reachable* section becomes
+     current, to the bottom of the document — the line sweeps down the
+     viewport, so the sections that can never reach it still get their turn,
+     in order. Behaviour above that stretch is unchanged. */
+  if (sections.length) {
+    var geom = null;
+
+    function measure() {
+      var winH   = window.innerHeight;
+      var max    = Math.max(0, document.documentElement.scrollHeight - winH);
+      var refTop = nav.offsetHeight + 24;   // reference line, from viewport top
+      var tops   = sections.map(function (s) { return s.offsetTop; });
+
+      // the furthest point down the document the fixed line can ever reach
+      var reachable  = max + refTop;
+      var sweepStart = max;
+      tops.forEach(function (top) {
+        if (top <= reachable) {
+          sweepStart = Math.min(max, Math.max(0, top - refTop));
+        }
       });
 
-      if (!visible.size) return;
+      geom = { max: max, winH: winH, refTop: refTop, tops: tops,
+               sweepStart: sweepStart };
+    }
 
-      // topmost section currently in the reading band wins
-      var top = null;
-      visible.forEach(function (section) {
-        if (!top || section.offsetTop < top.offsetTop) top = section;
-      });
-      setActive(top.id);
-    }, {
-      // reading band: just under the nav, down to 55% of the viewport
-      rootMargin: '-' + (nav.offsetHeight + 8) + 'px 0px -45% 0px',
-      threshold: 0
-    });
+    function update() {
+      if (!geom) measure();
 
-    sections.forEach(function (section) { spy.observe(section); });
+      var y = window.pageYOffset || document.documentElement.scrollTop || 0;
+      var refTop = geom.refTop;
+
+      if (geom.max > geom.sweepStart && y > geom.sweepStart) {
+        var t = (y - geom.sweepStart) / (geom.max - geom.sweepStart);
+        t = Math.max(0, Math.min(1, t));
+        refTop += t * (geom.winH - geom.refTop - 24);
+      }
+
+      var line = y + refTop;
+      var pick = null;
+      for (var i = 0; i < geom.tops.length; i++) {
+        if (geom.tops[i] <= line) pick = sections[i];
+      }
+
+      /* Head of the page: the first section has come into view but its
+         heading has not yet climbed to the reference line. The old band
+         lit the first pill here — keep that, or the nav sits dark for the
+         first few hundred px of scrolling. Mirrors the band's lower edge. */
+      if (!pick && geom.tops.length && geom.tops[0] <= y + geom.winH * 0.55) {
+        pick = sections[0];
+      }
+
+      // still nothing: the hero owns the screen, so no pill is current
+      setActive(pick ? pick.id : null);
+    }
+
+    var ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () { ticking = false; update(); });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', function () { measure(); update(); });
+    window.addEventListener('load', function () { measure(); update(); });
+    // webfonts change section heights, which moves every offset
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { measure(); update(); });
+    }
+
+    measure();
+    update();
   }
 
   /* --- 3. section reveal ------------------------------------------------
