@@ -559,17 +559,46 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   color: var(--c-espresso-mid);
 }
 
-/* --- Instagram link ----------------------------------------------------
-   inline-flex keeps the glyph and the handle welded together, so the pair
-   can never be split across a line break.
+/* --- footer contact links ----------------------------------------------
+   Instagram and phone share one treatment.
+
+   The row centres them and wraps: side by side where there is room,
+   stacked on a narrow phone. Both together are wider than a 320px screen,
+   so wrapping is the normal case there, not a failure mode.
+
+   row-gap is doing real work. A negative margin insets the margin box, so
+   each link's hit box bleeds past its own layout box by the FULL 0.55rem
+   (8.8px) at top and bottom — not by padding-minus-margin. Stacked, the
+   gap therefore has to clear 17.6px before the two tap targets stop
+   overlapping and the wrong link starts catching taps. 1.75rem leaves
+   about 10px of genuine air between them. */
+.footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  column-gap: 1.5rem;
+  row-gap: 1.75rem;
+
+}
+
+/* Stacked, the tap targets force ~42px between the two links, and the
+   default 8px under the tagline made that read as lopsided rather than
+   deliberate. Open the gap above the row so the footer sits as two tiers —
+   the line about the cart, then how to reach it. Written as a sibling
+   selector to outrank `.footer__line + .footer__line`, which is also two
+   classes and would otherwise win. */
+.footer__line + .footer__links { margin-top: 1.25rem; }
+
+/* inline-flex keeps each glyph welded to its own text, so a pair can never
+   be split across a line break.
 
    Sizing the tap target to the 44px accessibility guideline: the padding
    creates the hit area, and the negative margin pulls most of it back out
-   of the layout. Horizontally it cancels exactly, so the line wraps as it
-   always did. Vertically it cancels only part of it, which lets the
-   footer breathe by ~10px rather than having a 44px hit box overlap the
-   line above it. */
-.ig-link {
+   of the layout. Horizontally it cancels exactly. Vertically it cancels
+   only part of it, which lets the footer breathe by ~10px rather than
+   having a 44px hit box overlap the line above it. */
+.footer-link {
   display: inline-flex;
   align-items: center;
   gap: 0.45em;
@@ -601,7 +630,7 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   -webkit-tap-highlight-color: transparent;
 }
 
-.ig-link__icon {
+.footer-link__icon {
   width: 1.05em;
   height: 1.05em;
   flex: none;
@@ -610,12 +639,19 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   margin-inline-end: calc(var(--ls-mid) * -1);
 }
 
-.ig-link:hover { color: var(--c-rust); }
-.ig-link:hover .ig-link__handle { text-decoration: underline; text-underline-offset: 3px; }
-.ig-link:active { color: var(--c-rust); opacity: 0.75; transform: scale(0.97); }
+/* Letter-spacing also adds a trailing space after the FINAL character,
+   which sits inside the link's box. The <p> used to cancel that with
+   text-indent, but text-indent does not apply to flex items — so trim it
+   here instead, or each link is fractionally wider on its right and the
+   row centres a hair off. */
+.footer-link__label { margin-inline-end: calc(var(--ls-mid) * -1); }
+
+.footer-link:hover { color: var(--c-rust); }
+.footer-link:hover .footer-link__label { text-decoration: underline; text-underline-offset: 3px; }
+.footer-link:active { color: var(--c-rust); opacity: 0.75; transform: scale(0.97); }
 
 @media (prefers-reduced-motion: reduce) {
-  .ig-link:active { transform: none; }
+  .footer-link:active { transform: none; }
 }
 
 /* "Made fresh on the cart, every evening" still wraps on a narrow phone —
