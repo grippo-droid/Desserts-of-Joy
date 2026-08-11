@@ -574,6 +574,17 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   white-space: nowrap;
   vertical-align: middle;
 
+  /* It is a call to action, not a credit line — so it gets a little more
+     weight than the meta type around it, and nothing else. Same family,
+     same colour, same em-based tracking.
+     font-size in em (not a new token) so the bump follows the footer's
+     own fluid scale at every breakpoint, and so the icon — sized in em —
+     scales with it automatically.
+     600 is the heavier of the two Cormorant weights we self-host, and it
+     is already loaded for the section bands, so this costs no request. */
+  font-size: 1.18em;
+  font-weight: 600;
+
   padding-block: 0.85rem;
   padding-inline: 0.4rem;
   margin-block: -0.55rem;    /* partial: leaves the footer a little air */
@@ -637,6 +648,15 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
   /* the long label was eating the whole rule, collapsing the flourish
      lines to nothing and leaving two orphaned circles */
   .rule__label { letter-spacing: 0.15em; text-indent: 0.075em; }
+
+  /* The footer's second line was already at the very edge here — it needed
+     288px of a 288px box even before the Instagram link was emphasised.
+     Buy the room back from spacing rather than from the type: a narrower
+     footer gutter, a tighter separator, and a slightly smaller (but still
+     clearly emphasised) link. "Taxes included" is untouched. */
+  .footer { padding-inline: 0.75rem; }
+  .footer__sep { margin-inline: var(--s-1); }
+  .ig-link { font-size: 1.1em; }
 }
 
 /* -------------------------------------------------------------------------
