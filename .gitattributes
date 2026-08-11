@@ -1,0 +1,9 @@
+# Let git normalise line endings for text files...
+* text=auto
+
+# ...but never touch the font binaries. Line-ending conversion on a .woff2
+# would silently corrupt it and the site would fall back to system fonts.
+*.woff2 binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary

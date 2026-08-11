@@ -1,0 +1,589 @@
+/* =========================================================================
+   Desserts of Joy — digital menu
+   Step 1: tokens, hero, sticky category nav.
+   Plain CSS. Mobile-first. No build step.
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   0. FONTS — self-hosted, subsetted to the glyphs this page renders.
+   Built by fonts/build-fonts.py from the upstream google/fonts variable
+   sources; licences in fonts/. Re-run that script if the menu ever needs a
+   character outside basic ASCII + ₹ — · “ ” ’ …
+   ---------------------------------------------------------------------- */
+
+/* Wordmark. `block` rather than `swap`: this face is preloaded and 6 KB, so
+   it arrives before first paint, and blocking briefly is what guarantees the
+   hero never renders in a fallback script and then reflows. Subsetted to the
+   letters of "Desserts of Joy" only. */
+@font-face {
+  font-family: "Caveat";
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url("fonts/caveat-700.woff2") format("woff2");
+}
+
+/* Section headers, nav pills, meta lines. */
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/cormorant-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("fonts/cormorant-600.woff2") format("woff2");
+}
+
+/* Body, item names, prices, and the italic notes. */
+@font-face {
+  font-family: "EB Garamond";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/ebgaramond-400.woff2") format("woff2");
+}
+@font-face {
+  font-family: "EB Garamond";
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url("fonts/ebgaramond-400i.woff2") format("woff2");
+}
+
+/* -------------------------------------------------------------------------
+   1. DESIGN TOKENS
+   ---------------------------------------------------------------------- */
+:root {
+  /* --- Colour ---------------------------------------------------------- */
+  --c-cream:        #FCF6EC;  /* page ground — soft cream */
+  --c-cream-deep:   #F7EEE1;  /* recessed cream, alternating bands */
+  --c-surface:      #FFFCF6;  /* ivory, for cards / cutouts */
+
+  --c-blush:        #F3E1DD;  /* dusty blush — header bands */
+  --c-blush-deep:   #E7CCC6;  /* blush edge / hairlines */
+  --c-blush-tint:   #FAEFEC;  /* blush at 40% — hover, inactive fills */
+
+  --c-espresso:     #3A2A22;  /* body text — deep espresso brown */
+  --c-espresso-mid: #6C574A;  /* secondary text */
+  --c-espresso-soft:#9A8577;  /* tertiary / dotted leaders */
+
+  --c-rust:         #A9552F;  /* muted terracotta — HIGHLIGHT ONLY.
+                                 notes, prices-on-accent, links. Never a
+                                 background for more than a hairline. */
+
+  --c-line:         #E3D6C4;  /* neutral hairline on cream */
+  --c-focus:        #8C5A3C;  /* focus ring */
+
+  /* Dusk glow behind the hero — the evening-cart moment */
+  --grad-dusk: radial-gradient(
+      120% 80% at 50% -10%,
+      #F7E3DA 0%,
+      #FBEEE4 38%,
+      var(--c-cream) 72%
+  );
+
+  /* --- Type ------------------------------------------------------------ */
+  --f-script: "Caveat", "Segoe Script", "Brush Script MT", cursive;
+  --f-display:"Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --f-body:   "EB Garamond", Georgia, "Times New Roman", serif;
+
+  --t-wordmark: clamp(2.9rem, 14.5vw, 5.5rem);
+  --t-h2:       clamp(0.98rem, 3.4vw, 1.18rem);
+  --t-body:     clamp(1.02rem, 3.1vw, 1.1rem);
+  --t-small:    clamp(0.82rem, 2.6vw, 0.9rem);
+  --t-micro:    clamp(0.68rem, 2.2vw, 0.75rem);
+
+  --ls-wide:  0.26em;   /* small-caps section headers */
+  --ls-mid:   0.16em;   /* eyebrows, meta lines */
+  --ls-tight: 0.05em;
+
+  /* --- Space (4px base) ------------------------------------------------ */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+
+  /* --- Shape & depth --------------------------------------------------- */
+  --r-pill: 999px;
+  --r-band: 3px;
+  --r-card: 10px;
+
+  --shadow-nav:  0 6px 18px -10px rgba(58, 42, 34, 0.35);
+  --shadow-soft: 0 2px 10px -6px rgba(58, 42, 34, 0.28);
+
+  --nav-h: 56px;
+
+  /* --- Motion ---------------------------------------------------------- */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 160ms;
+  --dur: 280ms;
+
+  /* --- Layout ---------------------------------------------------------- */
+  --measure: 46rem;   /* max content width */
+  --gutter: clamp(1.15rem, 5vw, 2rem);
+}
+
+/* -------------------------------------------------------------------------
+   2. RESET / BASE
+   ---------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* keeps anchored sections clear of the sticky nav */
+  scroll-padding-top: calc(var(--nav-h) + var(--s-4));
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-cream);
+  color: var(--c-espresso);
+  font-family: var(--f-body);
+  font-size: var(--t-body);
+  line-height: 1.6;
+  font-feature-settings: "liga" 1, "kern" 1;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1, h2, p, ul { margin: 0; }
+ul { list-style: none; padding: 0; }
+
+a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+
+:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--c-espresso);
+  color: var(--c-cream);
+  padding: var(--s-2) var(--s-4);
+  z-index: 100;
+  font-size: var(--t-small);
+}
+.skip-link:focus { left: var(--s-3); top: var(--s-3); }
+
+/* -------------------------------------------------------------------------
+   3. HERO
+   ---------------------------------------------------------------------- */
+.hero {
+  background: var(--grad-dusk);
+  padding: clamp(2.25rem, 9vw, 3.75rem) var(--gutter) clamp(1.75rem, 7vw, 2.75rem);
+  text-align: center;
+  position: relative;
+}
+
+/* hairline that hands off to the nav */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 1px;
+  background: var(--c-blush-deep);
+  opacity: 0.6;
+}
+
+.hero__inner {
+  max-width: var(--measure);
+  margin-inline: auto;
+}
+
+.hero__eyebrow {
+  font-family: var(--f-display);
+  font-size: var(--t-micro);
+  letter-spacing: var(--ls-wide);
+  text-indent: calc(var(--ls-wide) / 2);
+  text-transform: uppercase;
+  color: var(--c-espresso-mid);
+  margin-bottom: var(--s-1);
+}
+
+.wordmark {
+  font-family: var(--f-script);
+  font-weight: 700;
+  font-size: var(--t-wordmark);
+  line-height: 0.92;
+  letter-spacing: 0.01em;
+  color: var(--c-espresso);
+  /* the script sits optically low; nudge it back into balance */
+  margin-block: 0.05em 0.12em;
+}
+
+/* --- ornamental rule: —— o  DESSERT CART  o —— --- */
+.rule {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  max-width: 21rem;
+  margin-inline: auto;
+}
+.rule__line {
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--c-espresso-soft);
+  opacity: 0.55;
+  max-width: 3.5rem;
+}
+.rule__dot {
+  flex: none;
+  width: 5px; height: 5px;
+  border: 1px solid var(--c-espresso-soft);
+  border-radius: 50%;
+}
+.rule__label {
+  font-family: var(--f-display);
+  font-size: var(--t-small);
+  font-weight: 600;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--c-espresso);
+  white-space: nowrap;
+}
+
+/* --- mug --- */
+.hero__mug {
+  margin-block: clamp(1.1rem, 4.5vw, 1.6rem) var(--s-3);
+  line-height: 0;
+}
+.mug {
+  color: var(--c-espresso);
+  max-width: 28vw;
+  min-width: 84px;
+  height: auto;
+}
+.mug__steam { color: var(--c-rust); opacity: 0.7; }
+
+.steam {
+  transform-origin: 50% 100%;
+  animation: steam-rise 4s var(--ease) infinite;
+}
+.steam--1 { animation-delay: 0s;    }
+.steam--2 { animation-delay: 0.65s; }
+.steam--3 { animation-delay: 1.3s;  }
+
+@keyframes steam-rise {
+  0%        { opacity: 0;    transform: translateY(6px)  scaleY(0.85); }
+  22%       { opacity: 0.85; }
+  70%       { opacity: 0.5;  }
+  100%      { opacity: 0;    transform: translateY(-9px) scaleY(1.12); }
+}
+
+.hero__tagline {
+  font-family: var(--f-body);
+  font-style: italic;
+  font-size: clamp(1.08rem, 4vw, 1.3rem);
+  color: var(--c-rust);
+  margin-bottom: var(--s-4);
+}
+
+.hero__location {
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: var(--t-small);
+  letter-spacing: var(--ls-mid);
+  text-indent: calc(var(--ls-mid) / 2);
+  text-transform: uppercase;
+  color: var(--c-espresso);
+}
+
+/* -------------------------------------------------------------------------
+   4. STICKY CATEGORY NAV
+   ---------------------------------------------------------------------- */
+.nav-sentinel { height: 1px; margin-bottom: -1px; }
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--c-cream);
+  border-bottom: 1px solid transparent;
+  transition: box-shadow var(--dur) var(--ease),
+              background-color var(--dur) var(--ease),
+              border-color var(--dur) var(--ease);
+}
+
+/* raised only once it detaches from the hero */
+.nav.is-stuck {
+  background: rgba(252, 246, 236, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom-color: var(--c-blush-deep);
+  box-shadow: var(--shadow-nav);
+}
+
+.nav__scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+}
+.nav__scroller::-webkit-scrollbar { display: none; }
+
+.nav__list {
+  display: flex;
+  gap: var(--s-2);
+  align-items: center;
+  min-height: var(--nav-h);
+  padding-inline: var(--gutter);
+  width: max-content;
+  min-width: 100%;
+}
+
+.pill {
+  display: block;
+  scroll-snap-align: center;
+  white-space: nowrap;
+  padding: 0.42em 1.05em;
+  border: 1px solid var(--c-blush-deep);
+  border-radius: var(--r-pill);
+  background: var(--c-blush-tint);
+  color: var(--c-espresso-mid);
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: var(--t-small);
+  letter-spacing: var(--ls-tight);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease),
+              color var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease),
+              transform var(--dur-fast) var(--ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pill:hover { background: var(--c-blush); color: var(--c-espresso); }
+
+/* press feedback — the one place a transform reads as "I registered
+   your tap" rather than decoration */
+.pill:active { transform: scale(0.96); }
+
+/* Three-step fill hierarchy: tint (idle) → blush (hover) → deep (active),
+   with the rust border reserved for the active tab only. */
+.pill.is-active {
+  background: var(--c-blush-deep);
+  border-color: var(--c-rust);
+  color: var(--c-espresso);
+}
+
+/* -------------------------------------------------------------------------
+   5. MENU SECTIONS (anchors + header bands; items land next step)
+   ---------------------------------------------------------------------- */
+.menu {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding: var(--s-6) var(--gutter) var(--s-7);
+}
+
+.section + .section { margin-top: var(--s-6); }
+
+/* --- section reveal on scroll ------------------------------------------
+   Sections are VISIBLE BY DEFAULT. They can only be hidden by the
+   .js-reveal class, which the inline script in index.html adds solely
+   after confirming IntersectionObserver exists and reduced-motion is off —
+   i.e. only once something is guaranteed to be able to un-hide them.
+
+   This replaces a scroll-driven `animation-timeline: view()` version that
+   shipped briefly and could strand sections at opacity 0: with fill:both,
+   anything that had not yet crossed its entry range held the `from`
+   keyframe, so whole sections rendered blank while still occupying layout
+   space. Never hide content on a timeline that isn't guaranteed to run. */
+.js-reveal .section {
+  transition: opacity 520ms var(--ease), transform 520ms var(--ease);
+}
+.js-reveal .section:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(14px);
+}
+
+/* the blush band from the printed card */
+.section__title {
+  background: var(--c-blush);
+  border-radius: var(--r-band);
+  padding: 0.55em var(--s-4);
+  text-align: center;
+
+  font-family: var(--f-display);
+  font-weight: 600;
+  font-size: var(--t-h2);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--c-espresso);
+  /* letter-spacing leaves a trailing gap that throws centring off by half
+     a space — nudge the glyphs back over the true centre */
+  text-indent: calc(var(--ls-wide) / 2);
+}
+
+/* --- item rows with dotted leaders ------------------------------------- */
+.items {
+  margin-top: var(--s-4);
+  padding-inline: var(--s-1);
+}
+
+.item {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  padding-block: 0.34em;
+}
+
+.item__name {
+  min-width: 0;          /* lets long names wrap instead of overflowing */
+  color: var(--c-espresso);
+}
+
+/* An empty span: with height 0 its baseline is its bottom edge, so in a
+   baseline-aligned row the dotted border lands exactly on the text
+   baseline — the printed-menu leader, no repeated dot characters. */
+.item__leader {
+  flex: 1 1 auto;
+  min-width: var(--s-5);
+  border-bottom: 1px dotted var(--c-espresso-soft);
+  opacity: 0.8;
+}
+
+.item__price {
+  flex: none;
+  min-width: 3.2em;      /* holds ₹79 and ₹149 in one right-aligned column */
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--c-espresso);
+}
+
+/* small terracotta aside under a list */
+.section__note {
+  margin-top: var(--s-3);
+  text-align: center;
+  font-style: italic;
+  font-size: var(--t-small);
+  color: var(--c-rust);
+}
+
+/* -------------------------------------------------------------------------
+   6. FOOTER
+   Deliberately quiet: same small-caps meta type as the hero's supporting
+   lines, no script face, so it closes the page without answering the
+   wordmark.
+   ---------------------------------------------------------------------- */
+.footer {
+  background: var(--c-cream-deep);
+  border-top: 1px solid var(--c-blush-deep);
+  padding: var(--s-5) var(--gutter) calc(var(--s-5) + env(safe-area-inset-bottom));
+  text-align: center;
+}
+
+.footer__line + .footer__line { margin-top: var(--s-2); }
+
+.footer__line {
+  font-family: var(--f-display);
+  font-size: var(--t-micro);
+  letter-spacing: var(--ls-mid);
+  text-indent: calc(var(--ls-mid) / 2);
+  text-transform: uppercase;
+  color: var(--c-espresso-mid);
+}
+.footer__line a { color: var(--c-rust); text-decoration: none; }
+.footer__line a:hover { text-decoration: underline; }
+.footer__sep { margin-inline: var(--s-2); opacity: 0.6; }
+
+/* On a 320px screen these lines wrap. Keep phrases intact rather than
+   splitting "Taxes / included", and let the browser even out the ragged
+   edge where it supports balancing. */
+.footer__nowrap { white-space: nowrap; }
+.footer__line   { text-wrap: balance; }
+
+/* -------------------------------------------------------------------------
+   7. VERY NARROW PHONES (≤360px — old/compact Androids)
+   Buys back horizontal room so the longest row, "Roasted Almond
+   Chocolate ····· ₹65", still keeps a visible leader.
+   ---------------------------------------------------------------------- */
+@media (max-width: 22.5em) {
+  :root { --gutter: 1rem; }
+  .items { padding-inline: 0; }
+  .item { gap: var(--s-1); }
+  .item__leader { min-width: var(--s-3); }
+  .item__price { min-width: 2.9em; }
+
+  /* the wide tracking is what pushes the footer onto three lines here —
+     ease it off just enough for each line to hold together */
+  .footer__line { letter-spacing: 0.09em; text-indent: 0.045em; }
+}
+
+/* -------------------------------------------------------------------------
+   8. LARGER SCREENS
+   ---------------------------------------------------------------------- */
+@media (min-width: 40em) {
+  :root { --nav-h: 62px; }
+
+  .nav__list {
+    justify-content: center;
+    flex-wrap: wrap;
+    width: auto;
+    gap: var(--s-3) var(--s-2);
+    padding-block: var(--s-2);
+  }
+  .nav__scroller { overflow: visible; }
+
+  .mug { max-width: 120px; }
+}
+
+/* -------------------------------------------------------------------------
+   9. MOTION PREFERENCES
+   ---------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* steam holds as a soft static wisp rather than freezing mid-fade */
+  .steam { animation: none !important; opacity: 0.55; }
+
+  /* Belt and braces: the inline script won't add .js-reveal under reduced
+     motion, but if it ever did, content must still be visible. */
+  .section, .js-reveal .section:not(.is-revealed) {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* no press-scale on tap */
+  .pill:active { transform: none; }
+}
+
+/* -------------------------------------------------------------------------
+   10. PRINT
+   ---------------------------------------------------------------------- */
+@media print {
+  .nav, .skip-link { display: none; }
+  body { background: #fff; }
+  .hero { background: none; }
+
+  /* never print a blank gap where an unrevealed section would be */
+  .section, .js-reveal .section:not(.is-revealed) {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

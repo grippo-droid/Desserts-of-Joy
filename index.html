@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Desserts of Joy — by Two Sisters · Undri, Pune</title>
+<meta name="description" content="Desserts of Joy — a dessert cart by two sisters. Brownie bowls, waffles, cupcakes, coffee &amp; more. Fresh every evening at I Life Pearl &amp; Kite, Undri, Pune.">
+<meta name="theme-color" content="#FCF6EC">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8D%B0%3C/text%3E%3C/svg%3E">
+
+<!-- The wordmark face, fetched in parallel with the stylesheet rather than
+     after it. This is what stops the hero reflowing on first load: without
+     it the browser can't discover the font until styles.css has parsed. -->
+<link rel="preload" href="fonts/caveat-700.woff2" as="font" type="font/woff2" crossorigin>
+
+<link rel="stylesheet" href="styles.css">
+
+<!-- Fonts are self-hosted and subsetted (see fonts/). No third-party
+     requests: the page is entirely same-origin. -->
+
+<!-- Opt IN to the scroll reveal, only if this browser can actually run it.
+     Sections are visible by default in CSS; .js-reveal is what permits them
+     to start hidden, and script.js is what takes them out of that state.
+     If anything here fails, the menu simply renders with no animation —
+     which is the only acceptable failure mode for a menu. -->
+<script>
+  (function () {
+    try {
+      if ("IntersectionObserver" in window &&
+          !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.className += " js-reveal";
+      }
+    } catch (e) { /* leave everything visible */ }
+  })();
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#nav">Skip to menu</a>
+
+<!-- ============================ HERO ============================ -->
+<header class="hero" role="banner">
+  <div class="hero__inner">
+
+    <p class="hero__eyebrow">by two sisters</p>
+
+    <h1 class="wordmark">Desserts of Joy</h1>
+
+    <p class="rule" role="presentation">
+      <span class="rule__line"></span>
+      <span class="rule__dot"></span>
+      <span class="rule__label">Dessert Cart</span>
+      <span class="rule__dot"></span>
+      <span class="rule__line"></span>
+    </p>
+
+    <!-- Signature visual: mug + rising steam -->
+    <div class="hero__mug">
+      <svg class="mug" viewBox="0 0 120 110" width="112" height="103" role="img" aria-label="A warm mug with rising steam">
+        <g class="mug__steam" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
+          <path class="steam steam--1" d="M45 34c-5-6 5-10 0-16s3-9 3-9"/>
+          <path class="steam steam--2" d="M60 30c-5-7 5-11 0-17s3-10 3-10"/>
+          <path class="steam steam--3" d="M75 34c-5-6 5-10 0-16s3-9 3-9"/>
+        </g>
+        <g class="mug__body">
+          <path d="M92 50h6a12 12 0 0 1 0 24h-8" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M28 48h64v22a26 26 0 0 1-26 26H54a26 26 0 0 1-26-26V48Z" fill="var(--c-surface)" stroke="currentColor" stroke-width="4.5" stroke-linejoin="round"/>
+          <path d="M28 58h64" stroke="var(--c-blush-deep)" stroke-width="4.5"/>
+          <path d="M24 101h72" stroke="currentColor" stroke-width="4.5" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+
+    <p class="hero__tagline">&ldquo;Sweet moments, served warm.&rdquo;</p>
+
+    <p class="hero__location">I Life Pearl &amp; Kite &middot; Undri, Pune</p>
+
+  </div>
+</header>
+
+<!-- ====================== CATEGORY NAVIGATION ====================== -->
+<div class="nav-sentinel" aria-hidden="true"></div>
+
+<nav class="nav" id="nav" aria-label="Menu categories">
+  <div class="nav__scroller">
+    <ul class="nav__list">
+      <li><a class="pill" href="#brownie-bowls">Brownie Bowls</a></li>
+      <li><a class="pill" href="#waffles">Waffles</a></li>
+      <li><a class="pill" href="#cupcakes-cookies">Cupcakes &amp; Cookies</a></li>
+      <li><a class="pill" href="#maggi">Maggi</a></li>
+      <li><a class="pill" href="#sandwiches">Sandwiches</a></li>
+      <li><a class="pill" href="#coffee-sips">Coffee &amp; Sips</a></li>
+      <li><a class="pill" href="#cake-glasses">Cake Glasses</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ========================== MENU SECTIONS ========================== -->
+<main class="menu" id="menu">
+
+  <section class="section" id="brownie-bowls" aria-labelledby="h-brownie-bowls">
+    <h2 class="section__title" id="h-brownie-bowls">Brownie Bowls</h2>
+    <ul class="items">
+      <li class="item">
+        <span class="item__name">Classic Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;79</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Double Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;79</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Triple Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;99</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Oreo Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;99</span>
+      </li>
+      <li class="item">
+        <span class="item__name">KitKat Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;99</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Lotte Choco Pie</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;99</span>
+      </li>
+    </ul>
+    <p class="section__note">Our signature &mdash; more flavours available</p>
+  </section>
+
+  <section class="section" id="waffles" aria-labelledby="h-waffles">
+    <h2 class="section__title" id="h-waffles">Waffles</h2>
+    <ul class="items">
+      <li class="item">
+        <span class="item__name">White Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;99</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Milk Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;99</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Dark Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;99</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Classic Double Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;99</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Classic Triple Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;149</span>
+      </li>
+      <li class="item">
+        <span class="item__name">KitKat</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;139</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Oreo Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;129</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Royal Almond Choco</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;149</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="cupcakes-cookies" aria-labelledby="h-cupcakes-cookies">
+    <h2 class="section__title" id="h-cupcakes-cookies">Cupcakes &amp; Cookies</h2>
+    <ul class="items">
+      <li class="item">
+        <span class="item__name">Chocolate Cupcake</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;49</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Vanilla Cupcake</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;49</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Red Velvet Cupcake</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;59</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Cookie</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;59</span>
+      </li>
+    </ul>
+    <p class="section__note">Cupcakes served with fresh cream</p>
+  </section>
+
+  <section class="section" id="maggi" aria-labelledby="h-maggi">
+    <h2 class="section__title" id="h-maggi">Maggi</h2>
+    <ul class="items">
+      <li class="item">
+        <span class="item__name">Veg</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;49</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Masala</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;59</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Cheese</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;70</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Peri-Peri</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;79</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="sandwiches" aria-labelledby="h-sandwiches">
+    <h2 class="section__title" id="h-sandwiches">Sandwiches</h2>
+    <ul class="items">
+      <li class="item">
+        <span class="item__name">Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;59</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Roasted Almond Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;65</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Mixed Fruit Jam</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;59</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Bread &amp; Butter</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;39</span>
+      </li>
+    </ul>
+    <p class="section__note">Grilled to order</p>
+  </section>
+
+  <section class="section" id="coffee-sips" aria-labelledby="h-coffee-sips">
+    <h2 class="section__title" id="h-coffee-sips">Coffee &amp; Sips</h2>
+    <ul class="items">
+      <li class="item">
+        <span class="item__name">Hot Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;49</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Coffee</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;39</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Elaichi Coffee</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;49</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Black Coffee</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;39</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Lemon Tea</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;29</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Iced Tea</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;59</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="section" id="cake-glasses" aria-labelledby="h-cake-glasses">
+    <h2 class="section__title" id="h-cake-glasses">Cake Glasses</h2>
+    <ul class="items">
+      <li class="item">
+        <span class="item__name">Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;89</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Double Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;99</span>
+      </li>
+      <li class="item">
+        <span class="item__name">Triple Chocolate</span>
+        <span class="item__leader" aria-hidden="true"></span>
+        <span class="item__price">&#8377;119</span>
+      </li>
+    </ul>
+  </section>
+
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <p class="footer__line">Made fresh on the cart, every evening</p>
+  <p class="footer__line">
+    <a href="https://instagram.com/dessertsofjoy.pune" target="_blank" rel="noopener">@dessertsofjoy.pune</a>
+    <span class="footer__sep">&middot;</span>
+    <span class="footer__nowrap">Taxes included</span>
+  </p>
+</footer>
+
+<script src="script.js" defer></script>
+</body>
+</html>
