@@ -229,6 +229,11 @@ a { color: var(--c-rust); text-decoration-thickness: 1px; text-underline-offset:
 
 .hero__eyebrow {
   font-family: var(--f-display);
+  /* 600, not 700: the self-hosted Cormorant Garamond subset ships 400 and
+     600 only (fonts/cormorant-400.woff2, fonts/cormorant-600.woff2).
+     Asking for 700 would get the 600 face anyway, or a synthesised bold
+     depending on the engine — so state the weight we actually have. */
+  font-weight: 600;
   font-size: var(--t-micro);
   letter-spacing: var(--ls-wide);
   text-indent: calc(var(--ls-wide) / 2);
